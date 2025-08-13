@@ -1,0 +1,28 @@
+name: cd
+
+on:
+    push:
+        branches: ["main"]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        env:
+            IMAGE_NAME: iamdude12/backend
+            IMAGE_TAG: ${{github.sha}}
+        
+        steps:
+            - name: check code
+              uses: actions/checkout@v4
+            
+            - name: build image
+              run: docker build -t ${{env.IMAGE_NAME}}:${{env.IMAGE_TAG}} --platform linux/amd64 .
+            
+            - name: login to dockerhub
+              uses: docker/login-actions@v3
+              with:
+                username: ${{secrets.DOCKERHUB_USERNAME}}
+                PASSWORD: ${{secrets.DOCKERHUB_PASSWORD}}
+            
+            - name: push image
+              run: docker push ${{env.IMAGE_NAME}}:${{env.IMAGE_TAG}}
