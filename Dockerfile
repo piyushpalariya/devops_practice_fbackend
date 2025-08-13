@@ -17,4 +17,4 @@ RUN chown -R containeruser /app
 USER containeruser
 
 
-CMD [ "node","index.js",]
+CMD [ "node","index.js"]
